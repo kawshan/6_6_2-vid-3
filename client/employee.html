@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script>
+    window.addEventListener("load",loadEmployeeView);
+
+    function loadEmployeeView(){
+      var http= new XMLHttpRequest();
+
+      http.onreadystatechange= function (){
+         if (this.readyState==4 && this.status==200  ){
+           showEmployee(this.responseText);
+           var employees=JSON.parse(this.responseText);
+
+         }
+      }
+
+      http.open("GET","../server/employee_view.php",true);
+      http.send();
+
+    }
+    function showEmployee($json){
+      var employees=JSON.parse($json);
+      for (let i = 0; i <employees.length; i++) {
+      const employee=employees[i];
+
+      var tr=document.createElement("tr");
+
+      var tdID=document.createElement("td");
+      tdID.innerHTML=employee['id'];
+      tr.appendChild(tdID);
+
+
+        var tdName=document.createElement("td");
+        tdName.innerHTML=employee['name'];
+        tr.appendChild(tdName);
+
+        var tdAge=document.createElement("td");
+        tdAge.innerHTML=employee['age'];
+        tr.appendChild(tdAge);
+
+        var tdGender=document.createElement("td");
+        tdGender.innerHTML=employee['gender'];
+        tr.appendChild(tdGender);
+
+        var tdDelete=document.createElement("td");
+        var btnDelete=document.createElement("input");
+        btnDelete.type="button";
+        btnDelete.value="Delete";
+        btnDelete.addEventListener("click",function (){
+          window.alert(employee['id']);
+        });
+
+        tdDelete.appendChild(btnDelete);
+        tr.appendChild(btnDelete);
+
+      display.appendChild(tr)
+
+
+
+      }
+    }
+  </script>
+</head>
+<body >
+<form action="../server/employee_add.php" method="post">
+  <label>Name :</label>
+  <input name="name"><br><br>
+
+  <label>age :</label>
+  <input name="age"><br><br>
+
+  <label>gender :</label>
+  <input name="gender"><br><br>
+
+  <input type="reset" value="clear">
+  <input type="submit" value="submit">
+
+
+</form>
+<p>----------------------------------------------------------------</p>
+<h1>employee view</h1>
+<table border="1" cellspacing="0" cellpadding="5" >
+  <thead>
+  <tr>
+    <th>id</th>
+    <th>name</th>
+    <th>age</th>
+    <th>gender</th>
+    <th>delete</th>
+  </tr>
+  </thead>
+  <tbody id="display">
+
+  </tbody>
+</table>
+</body>
+</html>
+
